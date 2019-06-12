@@ -1,0 +1,14 @@
+# System and IDE files
+Thumbs.db
+.DS_Store
+.Trash
+.idea
+nohup.out
+
+# Vendors
+node_modules/
+sample/
+
+#other
+*.zip
+*.fla
