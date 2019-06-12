@@ -2,8 +2,8 @@ let express = require('express');
 
 let app = express();
 
-app.use('/', express.static('./apps/'));
+app.use('/', express.static('./examples/'));
 
 app.listen(3000, function () {
-	console.log('ECMAScript is running at port 3000.');
+	console.log('app is running at port 3000.');
 });
