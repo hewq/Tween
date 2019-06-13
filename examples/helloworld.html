@@ -30,7 +30,7 @@
 		position = {x: 100 * rem, y: 100 * rem, rotation: 0};
 		target = document.querySelector('#target');
 		tween = new TWEEN.Tween(position)
-			.to({x: 700 * rem, y: 200 * rem, rotation: 359}, 2000)
+			.to({x: 600 * rem, y: 200 * rem, rotation: 359}, 2000)
 			.delay(1000)
 			.easing(TWEEN.Easing.Elastic.InOut)
 			.onUpdate(update);
@@ -61,7 +61,7 @@
 	}
 
 	init();
-	animate(5000);
+	animate();
 </script>
 </body>
 </html>

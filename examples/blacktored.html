@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Black and Red / Tween.js</title>
+	<style>
+		body { font-family: Arial, Helvetica, sans; }
+		table { border-collapse: collapse; }
+		td { width: 0.025rem; height: 0.025rem; }
+		#target { position: absolute; }
+	</style>
+<script>
+!function(b,a){var c=b.documentElement;a=function(){var a=c.clientWidth;a&&(c.style.fontSize=a/375*100+"px")};window.addEventListener("orientationchange"in window?"orientationchange":"resize",a,!1);a()}(document,window);
+</script>
+</head>
+<body ontouchmove="return false;" style="background: #fff;">
+	<div class="container">
+		<div class="page">
+			<div id="target" class="target"></div>
+		</div>
+	</div>
+<script src="//ossweb-img.qq.com/images/js/jquery/jquery-1.11.3.min.js"></script>
+<script src="js/Tween.js"></script>
+<script src="js/stats.min.js"></script>
+<script src="js/RequestAnimationFrame.js"></script>
+<script>
+	let rem = 0.01 * 0.5 * parseInt($('html').css('font-size').slice(0, -2));
+
+	let stats;
+
+	let init = () => {
+		let target = document.getElementById('target');
+		stats = new Stats();
+		target.appendChild(stats.domElement);
+
+		let t = document.createElement('table');
+		let index = 0;
+		for (let i = 0; i < 64; i++) {
+			let tr = t.insertRow(-1);
+			for (let j = 0; j < 64; j++) {
+				let td = tr.insertCell(-1);
+				td.style.background = '#000';
+				let x = (i + j) * 0.1;
+				let cell = { 'td': td, value: 0};
+				let tween = new TWEEN.Tween(cell)
+					.to({ value: 1 }, 8000)
+					.delay((0.001 * index + Math.random()) * 500)
+					.easing(TWEEN.Easing.Elastic.InOut)
+					.onUpdate((object) => {
+						let c = Math.floor(object.value * 0xff);
+						object.td.style.background = 'rgb(' + c + ', 0, 0)';
+					});
+
+				let tweenBack = new TWEEN.Tween(cell)
+					.to({ value: 0 }, 4000)
+					.delay((0.001 * index + Math.random()) * 500)
+					.easing(TWEEN.Easing.Elastic.InOut)
+					.onUpdate((object) => {
+						let c = Math.floor(object.value * 0xff);
+						object.td.style.background = 'rgb(' + c + ', 0, 0)';
+					});
+
+				tween.chain(tweenBack);
+				tweenBack.chain(tween);
+
+				tween.start();
+				index++;
+			}
+		}
+		target.appendChild(t);
+	};
+
+	let animate = (time) => {
+		requestAnimationFrame(animate);
+		TWEEN.update(time);
+		stats.update();
+	};
+
+	init();
+	animate();
+</script>
+</body>
+</html>

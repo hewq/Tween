@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>bars / Tween.js</title>
+<script>
+!function(b,a){var c=b.documentElement;a=function(){var a=c.clientWidth;a&&(c.style.fontSize=a/375*100+"px")};window.addEventListener("orientationchange"in window?"orientationchange":"resize",a,!1);a()}(document,window);
+</script>
+</head>
+<body ontouchmove="return false;" style="background: #fff;">
+	<div class="container">
+		<div class="page">
+			<div id="target" class="target"></div>
+		</div>
+	</div>
+<script src="//ossweb-img.qq.com/images/js/jquery/jquery-1.11.3.min.js"></script>
+<script src="js/Tween.js"></script>
+<script src="js/stats.min.js"></script>
+<script src="js/RequestAnimationFrame.js"></script>
+<script>
+	let rem = 0.01 * 0.5 * parseInt($('html').css('font-size').slice(0, -2));
+
+	let stats;
+
+	let init = () => {
+		stats = new Stats();
+		let sds = stats.domElement.style;
+		sds.position = 'absolute';
+		sds.left = '0';
+		sds.top = '0';
+		document.body.appendChild(stats.domElement);
+
+		for (let i = 0; i < 1000; i++) {
+			let startValue = 200 + (Math.random() - Math.random()) * 250;
+			let endValue = 200 + (Math.random() - Math.random()) * 250;
+
+			let domElement = document.createElement('div');
+			let bg = (Math.random() * 0xffffff) >> 0;
+			domElement.style.position = 'absolute';
+			domElement.style.top = (Math.random() * window.innerHeight) + 'px';
+			domElement.style.left = startValue + 'px';
+			domElement.style.background = '#' + bg.toString(16);
+			domElement.style.width = 100 * rem + 'px';
+			domElement.style.height = 2 * rem + 'px';
+
+			let elem = { x: startValue, domElement: domElement };
+			let updateCallback = (object) => {
+				object.domElement.style.left = object.x + 'px';
+			}
+
+			let tween = new TWEEN.Tween(elem)
+				.to({ x: endValue }, 4000)
+				.delay(Math.random() * 1000)
+				.onUpdate(updateCallback)
+				.easing(TWEEN.Easing.Back.Out)
+				.start();
+
+			let tweenBack = new TWEEN.Tween(elem, false)
+				.to({ x: startValue }, 4000)
+				.delay(Math.random() * 1000)
+				.onUpdate(updateCallback)
+				.easing(TWEEN.Easing.Elastic.InOut);
+
+			tween.chain(tweenBack);
+			tweenBack.chain(tween);
+
+			document.body.appendChild(elem.domElement);
+		}
+	};
+
+	let animate = () => {
+		requestAnimationFrame(animate);
+		TWEEN.update();
+		stats.update();
+	};
+
+	init();
+	animate();
+</script>
+</body>
+</html>
