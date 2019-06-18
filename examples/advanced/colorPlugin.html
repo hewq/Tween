@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: Canvas Tweening Example</title>
+	<script src="js/easeljs-NEXT.min.js"></script>
+	<script src="js/tweenjs-NEXT.js"></script>
+	<script src="js/ColorPlugin.js"></script>
+</head>
+<body>
+	<script>
+		let init = () => {
+			stage = new createjs.Stage('canvas1');
+			stage.autoClear = false;
+
+			let star = new createjs.Shape();
+			let fillCmd = star.graphics.beginFill('#FF0000').command;
+			star.graphics.drawPolyStar(0, 0, 300, 12, 0.85);
+			star.x = stage.canvas.width / 2;
+			star.y = stage.canvas.height / 2;
+
+			stage.addChild(star);
+
+			createjs.ColorPlugin.install();
+
+			createjs.Tween.get(fillCmd, {loop: -1, bounce: true})
+				.to({style: '#00FF00'}, 1000)
+				.to({style: '#00F'}, 1000)
+				.to({style: 'rgb(255, 128, 0)'}, 1000)
+				.to({style: 'hsl(295, 100%, 50%)'}, 1000)
+				.to({style: 'rgb(0%, 100%, 100%)'}, 1000)
+
+			createjs.Tween.get(star, {loop: -1, bounce: true})
+				.to({alpha: 0.3, scaleX: 0.2, scaleY: 0.2})
+				.to({rotation: 360, scaleX: 3, scaleY: 3}, 3300, createjs.Ease.quadInOut);
+
+			createjs.Ticker.timingMode = createjs.Ticker.RAF;
+			createjs.Ticker.addEventListener('tick', stage);
+		}
+
+		window.addEventListener('load', () => {
+			init();
+		})
+	</script>
+</body>
+<canvas id="canvas1" width="960" height="350"></canvas>
+<br>
+<input type="button" value="toggle paused" onclick="createjs.Ticker.paused = !createjs.Ticker.paused;">
+</html>
