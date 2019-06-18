@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Tween.js / stop chained</title>
+<script>
+!function(b,a){var c=b.documentElement;a=function(){var a=c.clientWidth;a&&(c.style.fontSize=a/375*100+"px")};window.addEventListener("orientationchange"in window?"orientationchange":"resize",a,!1);a()}(document,window);
+</script>
+<style type="text/css">
+			.box {
+				width: 100px;
+				height: 100px;
+				display: flex;
+				flex-flow: row;
+				align-items: center;
+				text-align: center;
+				-webkit-border-radius: 70px;
+				-moz-border-radius: 70px;
+				border-radius: 70px;
+				position: absolute;
+				border: 1px solid black;
+				font-size: 10px;
+				padding: 20px;
+			}
+
+			#target1 {
+				background: #fcc;
+			}
+
+			#target2 {
+				background: #cfc;
+			}
+		</style>
+</head>
+<body ontouchmove="return false;" style="background: #fff;">
+	<div style="position: absolute; top: 250px; left: 50px; ">
+		<button id="start">Start</button>
+		<button id="stop">Stop</button>
+		<div id="target1" data-rotation="0" data-y="0" class="box" style="left: 0px; top: 50px">
+			Box One
+		</div>
+		<div id="target2" data-rotation="0" data-y="0" class="box" style="left: 0px; top: 200px">
+			Box Two
+		</div>
+	</div>
+<script src="//ossweb-img.qq.com/images/js/jquery/jquery-1.11.3.min.js"></script>
+<script src="js/Tween.js"></script>
+<script src="js/RequestAnimationFrame.js"></script>
+<script>
+	let a = document.getElementById('target1');
+	let b = document.getElementById('target2');
+	let start = document.getElementById('start');
+	let stop = document.getElementById('stop');
+	let t0, t1;
+	let p0 = {x: 0},
+		p1 = {x: 0};
+
+	start.onclick = () => {
+		if (!t0 && !t1) {
+			t0 = new TWEEN.Tween(p0)
+				.to({x: 700}, 2000)
+				.delay(1000)
+				.easing(TWEEN.Easing.Elastic.InOut)
+				.onUpdate(() => {
+					a.style.left = p0.x +  'px';
+				})
+				.onComplete(() => {
+					p0.x = 0;
+					a.style.left = p0.x + 'px';
+				});
+
+			t1 = new TWEEN.Tween(p1)
+				.to({x: 1000}, 3000)
+				.delay(1000)
+				.easing(TWEEN.Easing.Elastic.InOut)
+				.onUpdate(() => {
+					b.style.left = p1.x + 'px';
+				})
+				.onComplete(() => {
+					p1.x = 0;
+					b.style.left = p1.x + 'px';
+				});
+
+			t0.chain(t1);
+			t1.chain(t0);
+		}
+		t0.start();
+	};
+
+	stop.onclick = () => {
+		t0.stop();
+	}
+
+	let animate = (time) => {
+		requestAnimationFrame(animate);
+		TWEEN.update(time);
+	};
+
+	animate();
+</script>
+</body>
+</html>

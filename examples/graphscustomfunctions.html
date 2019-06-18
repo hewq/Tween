@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Tween.js/ graphs for custom easing functions</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<style>
+		body {
+			margin: 0px;
+		}
+		#target {
+			font-size: 13px;
+			padding: 0px 32px;
+		}
+	</style>
+</head>
+<body>
+	<div id="target"></div>
+	<script src="js/Tween.js"></script>
+	<script src="js/RequestAnimationFrame.js"></script>
+	<script src="js/createGraph.js"></script>
+	<script>
+		
+		function init() {
+			let target = document.getElementById('target');
+			target.appendChild(createGraph('Ten Steps', tenStepsEasing));
+			target.appendChild(document.createElement('br'));
+			for (let i = 0; i < 4; i++) {
+				let numSteps = (i + 1) * 4;
+				target.appendChild(createGraph(numSteps + ' steps', createStepFunction(numSteps)));
+			}
+			target.appendChild(document.createElement('br'));
+			target.appendChild(createGraph('Random', randomEasing));
+			target.appendChild(document.createElement('br'));
+
+			target.appendChild(createGraph('Noisy Exponential.InOut', createNoisyEasing(0.1, TWEEN.Easing.Exponential.InOut)));
+			target.appendChild(createGraph('Noisy Elastic.InOut', createNoisyEasing(0.1, TWEEN.Easing.Elastic.InOut)));
+			target.appendChild(createGraph('Noisy Circular.InOut', createNoisyEasing(0.1, TWEEN.Easing.Circular.InOut)));
+		};
+
+		function animate() {
+			requestAnimationFrame(animate);
+			TWEEN.update();
+		};
+
+		function tenStepsEasing(k) {
+			return (Math.floor(k * 10) / 10);
+		}
+
+		function createStepFunction(numSteps) {
+			return function (k) {
+				return (Math.floor(k * numSteps) / numSteps);
+			}
+		}
+
+		function randomEasing(k) {
+			return Math.random();
+		}
+
+		function createNoisyEasing(randomProportion, easingFunction) {
+			let normalProportion = 1.0 - randomProportion;
+			return function (k) {
+				return randomProportion * Math.random() + normalProportion * easingFunction(k);
+			}
+		}
+
+		window.addEventListener('load', function () {
+			init();
+			animate();
+		})
+
+	</script>
+</body>
+</html>

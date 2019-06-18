@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Tween.js / dynamic to</title>
+	<style>
+		* {
+			font-size: 12px;
+		}
+	</style>
+<script>
+!function(b,a){var c=b.documentElement;a=function(){var a=c.clientWidth;a&&(c.style.fontSize=a/375*100+"px")};window.addEventListener("orientationchange"in window?"orientationchange":"resize",a,!1);a()}(document,window);
+</script>
+</head>
+<body ontouchmove="return false;" style="background: #fff;">
+	<div class="container">
+		<div class="page">
+			<div id="target"></div>
+		</div>
+	</div>
+<script src="js/Tween.js"></script>
+<script src="js/RequestAnimationFrame.js"></script>
+<script>
+	let init = () => {
+		let width = 480;
+		let height = 320;
+
+		let target = document.getElementById('target');
+		let canvas = document.createElement('canvas');
+		canvas.width = width;
+		canvas.height = height;
+		target.appendChild(canvas);
+
+		let context = canvas.getContext('2d');
+		let rabbit = {x: width - 50, y: 50};
+
+		new TWEEN.Tween(rabbit).to({x: width - 50, y: height - 50}, 3000).onUpdate((object) => {
+			context.fillStyle = 'rgb(240, 250, 240)';
+			context.fillRect(0, 0, width, height);
+
+			context.fillStyle = 'rgb(150, 150, 150)';
+
+			context.save();
+			context.translate(object.x, object.y);
+			context.beginPath();
+			context.moveTo(0, 0);
+			context.bezierCurveTo(15, 0, 15, -40, 5, -30);
+			context.lineTo(0, 0);
+			context.bezierCurveTo(-15, 0, -15, -40, -5, -30);
+			context.lineTo(0, 0);
+			context.fill();
+
+			context.beginPath();
+			context.arc(0, 0, 15, 0, Math.PI * 2, true);
+			context.fill();
+			context.restore();
+		}).start();
+
+		let fox = {x: 50, y: 50};
+
+		new TWEEN.Tween(fox).to(rabbit, 3000).onUpdate((object) => {
+			context.fillStyle = 'rgb(200, 80, 80)';
+			context.save();
+			context.translate(object.x, object.y - 13);
+			context.scale(1.2, 1.2);
+
+			context.beginPath();
+			context.moveTo(4, 24);
+			context.lineTo(8, 16);
+			context.lineTo(14, 10);
+			context.lineTo(15, 0);
+			context.lineTo(9, -10);
+			context.lineTo(2, 0);
+			context.lineTo(-2, 0);
+			context.lineTo(-9, -10);
+			context.lineTo(-15, 0);
+			context.lineTo(-14, 10);
+			context.lineTo(-8, 16);
+			context.lineTo(-4, 24);
+			context.closePath();
+			context.fill();
+
+			context.restore();
+		}).start();
+	};
+
+	let animate = (time) => {
+		requestAnimationFrame(animate);
+		TWEEN.update(time);
+	};
+
+	window.addEventListener('load', () => {
+		init();
+		animate();
+	});
+</script>
+</body>
+</html>

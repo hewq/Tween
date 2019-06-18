@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Tween.js / repeat</title>
+	<style type="text/css">
+		* {
+			font-size: 12px;
+		}
+		.box {
+			width: 100px;
+			height: 100px;
+			margin: 10px;
+			padding: 10px;
+			display: inline-block;
+			float: left;
+		}
+		#target1 {
+			background: #fcc;
+		}
+		#target2 {
+			background: #cfc;
+		}
+		#target3 {
+			background: #ccf;
+		}
+	</style>
+<script>
+!function(b,a){var c=b.documentElement;a=function(){var a=c.clientWidth;a&&(c.style.fontSize=a/375*100+"px")};window.addEventListener("orientationchange"in window?"orientationchange":"resize",a,!1);a()}(document,window);
+</script>
+</head>
+<body ontouchmove="return false;" style="background: #fff;">
+	<div class="container">
+		<div class="page">
+			<div id="target1" data-rotation="0" class="box">
+				repeat once
+			</div>
+			<div id="target2" data-rotation="0" class="box">
+				repeat five times
+			</div>
+			<div id="target3" data-rotation="0" class="box">
+				repeat forevers
+			</div>
+		</div>
+	</div>
+<script src="js/Tween.js"></script>
+<script src="js/RequestAnimationFrame.js"></script>
+<script>
+	let init = () => {
+		let target1 = document.getElementById('target1');
+		let tween1 = new TWEEN.Tween(target1.dataset)
+				.to({rotation: 360}, 2000)
+				.repeat(1)
+				.delay(1000)
+				.onUpdate((object) => {
+					updateBox(target1, object);
+				})
+				.start();
+		let target2 = document.getElementById('target2');
+		let tween = new TWEEN.Tween(target2.dataset)
+				.to({rotation: 360}, 2000)
+				.repeat(5)
+				.delay(1000)
+				.onUpdate((object) => {
+					updateBox(target2, object);
+				})
+				.start();
+		let target3 = document.getElementById('target3');
+		let tween3 = new TWEEN.Tween(target3.dataset)
+				.to({rotation: 360}, 2000)
+				.repeat(Infinity)
+				.delay(1000)
+				.onUpdate((object) => {
+					updateBox(target3, object);
+				})
+				.start();
+	};
+
+	let animate = (time) => {
+		requestAnimationFrame(animate);
+		TWEEN.update(time);
+	};
+
+	let updateBox = (box, params) => {
+		let s = box.style,
+			transform = 'rotate(' + Math.floor(params.rotation) + 'deg)';
+		s.webkitTransform = transform;
+		s.mozTransform = transform;
+		s.transform = transform;
+	}
+
+	window.addEventListener('load', () => {
+		init();
+		animate();
+	});
+</script>
+</body>
+</html>

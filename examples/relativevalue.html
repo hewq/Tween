@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Tween.js / relative values</title>
+	<style type="text/css">
+		.box {
+			width: 100px;
+			height: 100px;
+			margin: 10px;
+			padding: 10px;
+			display: inline-block;
+			float: left;
+		}
+		#target1 {
+			background: #fcc;
+		}
+	</style>
+<script>
+!function(b,a){var c=b.documentElement;a=function(){var a=c.clientWidth;a&&(c.style.fontSize=a/375*100+"px")};window.addEventListener("orientationchange"in window?"orientationchange":"resize",a,!1);a()}(document,window);
+</script>
+</head>
+<body ontouchmove="return false;" style="background: #fff;">
+	<div class="container">
+		<div class="page">
+			<div id="target1" style="position: absolute;" data-top="150" data-left="150" class="box">
+			</div>
+		</div>
+	</div>
+<script src="js/Tween.js"></script>
+<script src="js/RequestAnimationFrame.js"></script>
+<script>
+	let init = () => {
+		let target1 = document.getElementById('target1');
+		let tween1 = new TWEEN.Tween(target1.dataset)
+				.to({top: "+20", left: "-20"}, 500)
+				.repeat(5)
+				.delay(500)
+				.easing(TWEEN.Easing.Exponential.In)
+				.onUpdate((object) => {
+					object.top = Math.round(object.top);
+					object.left = Math.round(object.left);
+					updateBox(target1, object);
+				})
+				.start();
+			updateBox(target1, target1.dataset);
+	};
+
+	let animate = (time) => {
+		requestAnimationFrame(animate);
+		TWEEN.update(time);
+	};
+
+	let updateBox = (box, params) => {
+		let s = box.style,
+			transform = 'translate(' + params.left + 'px, ' + params.top + 'px)';
+		s.transform = transform;
+	}
+
+	window.addEventListener('load', () => {
+		init();
+		animate();
+	});
+</script>
+</body>
+</html>

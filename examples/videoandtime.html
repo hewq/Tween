@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Tween.js / video and time</title>
+	<style>
+		* {
+			font-size: 20px;
+		}
+	</style>
+<script>
+!function(b,a){var c=b.documentElement;a=function(){var a=c.clientWidth;a&&(c.style.fontSize=a/375*100+"px")};window.addEventListener("orientationchange"in window?"orientationchange":"resize",a,!1);a()}(document,window);
+</script>
+</head>
+<body ontouchmove="return false;" style="background: #fff;">
+	<div class="container">
+		<div class="page">
+			<div id="target">
+				<video src="http://img.bigbone.cn/fun/video/fun6.mp4" width="812" height="375" id="video"></video>
+			</div>
+		</div>
+	</div>
+<script src="//ossweb-img.qq.com/images/js/jquery/jquery-1.11.3.min.js"></script>
+<script src="js/Tween.js"></script>
+<script src="js/RequestAnimationFrame.js"></script>
+<script>
+	let init = () => {
+		let output = document.createElement('div');
+		let target = document.getElementById('target');
+		target.appendChild(output);
+
+		video = document.getElementById('video');
+		video.addEventListener('play', function (){
+			new TWEEN.Tween({x: 50})
+				.to({x: 400}, this.duration)
+				.easing(TWEEN.Easing.Linear.None)
+				.onUpdate((object) => {
+					let roundX = Math.round(object.x);
+					let transform = 'translateX(' + roundX + 'px)';
+					output.innerHTML = 'x == ' + roundX;
+					target.style.transform = transform;
+				})
+				.start(video.currentTime)
+		}, false);
+		video.play();
+	};
+
+	let animate = (time) => {
+		requestAnimationFrame(animate);
+		if (video.readyState === video.HAVE_ENOUGH_DATA) {
+			TWEEN.update(video.currentTime);
+		}
+	};
+
+	window.addEventListener('load', () => {
+		init();
+		animate();
+	});
+</script>
+</body>
+</html>
