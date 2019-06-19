@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: CSS Transform Tweening Example</title>
+	<style>
+		.box {
+			border-radius: 25%;
+			position: absolute;
+			top:  100px;
+			left: 100px;
+			width: 100px;
+			height: 100px;
+			background-color: #fff;
+			animation: test 1s linear;
+		}
+		.box5 {
+			border-radius: 25%;
+			position: absolute;
+			top:  100px;
+			left: 100px;
+			width: 100px;
+			height: 100px;
+			background-color: #00f;
+			animation: test2 1s linear;
+		}
+		.box2 {
+			border-radius: 25%;
+			position: absolute;
+			top:  400px;
+			left: 300px;
+			width: 100px;
+			height: 100px;
+			background-color: #f00;
+		}
+		.box3 {
+			border-radius: 25%;
+			position: absolute;
+			top:  300px;
+			left: 200px;
+			width: 100px;
+			height: 100px;
+			background-color: #0f0;
+		}
+		.box4 {
+			border-radius: 25%;
+			position: absolute;
+			top:  600px;
+			left: 400px;
+			width: 100px;
+			height: 100px;
+			background-color: #0f0;
+		}
+		@keyframes test {
+			100% {
+				transform: * translate(200px, 300px) rotate(90deg) translate(100px, 200px);
+			}
+		}
+		@keyframes test2 {
+			100% {
+				transform: * translate(300px, 500px) rotate(90deg);
+			}
+		}
+	</style>
+</head>
+<body style="background-color: #19101c; overflow: hidden;">
+	<div class="box"></div>
+	<div class="box2"></div>
+	<div class="box3"></div>
+	<div class="box4"></div>
+	<div class="box5"></div>
+</body>
+</html>
