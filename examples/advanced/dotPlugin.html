@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: Dot Plugin Example</title>
+	<script src="js/tweenjs-NEXT.js"></script>
+	<script src="js/easeljs-NEXT.min.js"></script>
+	<script src="js/DotPlugin.js"></script>
+	<script>
+		let init = () => {
+			let stage = new createjs.Stage('canvas1');
+			let w = stage.canvas.width, h = stage.canvas.height;
+			let circle = new createjs.Shape();
+			circle.graphics.beginFill('#ff0000').drawCircle(0, 0, 50);
+			circle.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1, w * 0.1, h / 2);
+			stage.addChild(circle);
+
+			createjs.DotPlugin.install();
+
+			createjs.Tween.get(circle, {loop: -1, bounce: true})
+				.to({'.transformMatrix.tx': w * 0.9, alpha: 0.1}, 1000);
+			createjs.Ticker.timingMode = createjs.Ticker.RAF;
+			createjs.Ticker.addEventListener('tick', stage);
+		};
+	</script>
+</head>
+<body onload="init()">
+	<canvas id="canvas1" width="960" height="350"></canvas>
+	<br>
+	<input type="button" value="toggle paused" onclick="createjs.Ticker.paused = !createjs.Ticker.paused;" />
+</body>
+</html>
