@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: Simple Tweening Example</title>
+	<script src="js/easeljs-NEXT.min.js"></script>
+	<script src="js/tweenjs-NEXT.js"></script>
+	<script>
+		let init = () => {
+			let stage = new createjs.Stage('canvas');
+			let circle = new createjs.Shape();
+			circle.graphics.beginFill('#ff0000').drawCircle(0, 0, 50);
+			circle.x = circle.y = 50;
+
+			let highlight = new createjs.Shape();
+			highlight.graphics.beginFill('#ffff66').drawRect(-50, -5, 100, 30);
+			highlight.x = 450;
+			highlight.y = 30;
+
+			let txt = new createjs.Text('TweenJS', 'bold 20px Arial');
+			txt.textAlign = 'center';
+			txt.x = 450;
+			txt.y = 30;
+
+			stage.addChild(circle, highlight, txt);
+
+			createjs.Tween.get(circle, {loop: -1})
+				.wait(1000)
+				.to({scaleX: 0.2, scaleY: 0.2})
+				.wait(1000)
+				.to({scaleX: 1, scaleY: 1}, 1000, createjs.Ease.bounceOut)
+
+			createjs.Tween.get(circle, {loop: -1, override: false})
+				.to({x: 500, y: 200, alpha: 0.1}, 1000, createjs.Ease.get(1))
+				.to({x: 50}, 1000, createjs.Ease.get(-1))
+				.call(console.log, ['wait...'], console)
+				.wait(700)
+				.to({y: 50, alpha: 1}, 300)
+				.call(console.log, ['done!'], console);
+
+			createjs.Tween.get(txt, {loop: -1, ignoreGlobalPause: true})
+				.to({text: 'A JavaScript tweening engine'}, 1500)
+				.set({visible: false}, highlight)
+				.to({text: 'TweenJS'}, 1500)
+				.set({visible: true}, highlight);
+			createjs.Ticker.framerate = 20;
+			createjs.Ticker.addEventListener('tick', stage);
+		};
+	</script>
+</head>
+<body onload="init()">
+	<canvas id="canvas" width="960" height="350"></canvas>
+	<input type="button" value="toggle paused" onclick="createjs.Ticker.paused = !createjs.Ticker.paused;">
+</body>
+</html>
