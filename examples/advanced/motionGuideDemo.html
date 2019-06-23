@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: Simple Motion Guide Demo</title>
+	<script src="js/easeljs-NEXT.min.js"></script>
+	<script src="js/tweenjs-NEXT.js"></script>
+	<script>
+		let stage;
+
+		let init = () => {
+			createjs.MotionGuidePlugin.install(createjs.Tween);
+			stage = new createjs.Stage('testCanvas');
+			let ball = new createjs.Shape();
+			ball.graphics.setStrokeStyle(5, 'round', 'round')
+				.beginStroke('#000000')
+				.beginFill('#f24828')
+				.drawCircle(0, 0, 55)
+				.setStrokeStyle(1, 'round', 'round')
+				.beginStroke('#000000')
+				.moveTo(0, 0)
+				.lineTo(55, 0);
+
+			stage.addChild(ball);
+			createjs.Tween.get(ball, {bounce: true, loop: 3})
+				.to({guide: {path: [100, 100, 700, 100, 800, 250], orient: 'fixed'}}, 2000);
+
+			createjs.Ticker.timingMode = createjs.Ticker.RAF;
+			createjs.Ticker.addEventListener('tick', tick);
+		};
+
+		let toggleGuide = false;
+		let tick = (event) => {
+			stage.update(event);
+
+			if (toggleGuide) {
+				createjs.MotionGuidePlugin.debug({path: [100,100, 700, 100, 800,250]}, stage.canvas.getContext('2d'), [0,0.5,1]);
+			}
+		};
+	</script>
+</head>
+<body onload="init()">
+	<canvas id="testCanvas" width="960" height="350"></canvas>
+	<div class="guide">
+		<input type="button" value="toggle guide" onclick="toggleGuide = !toggleGuide;">
+		<input type="button" value="toggle paused" onclick="createjs.Ticker.paused = !createjs.Ticker.paused;">
+	</div>
+</body>
+</html>
