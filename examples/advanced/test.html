@@ -1,73 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="UTF-8">
-	<title>TweenJS: CSS Transform Tweening Example</title>
-	<style>
-		.box {
-			border-radius: 25%;
-			position: absolute;
-			top:  100px;
-			left: 100px;
-			width: 100px;
-			height: 100px;
-			background-color: #fff;
-			animation: test 1s linear;
+	<title>TweenJS: CSS Performance Test</title>
+
+	<script type="text/javascript" src="js/tweenjs-NEXT.js"></script>
+	<script type="text/javascript" src="js/easeljs-NEXT.min.js"></script>
+	<script type="text/javascript" src="js/CSSPlugin.js"></script>
+	<!-- We also provide hosted minified versions of all CreateJS libraries.
+	  http://code.createjs.com -->
+
+<style>
+	.dot {
+		position:absolute; 
+		width: 1px;
+		height: 1px;
+	}
+	#fps {
+		background-color: #eaebee;
+		padding: 5px;
+		font-weight:bold;
+	}
+	
+</style>
+
+<script id="editable">
+	var c=createjs, stage, centerX, centerY, radius, fpsFld;
+	var duration=750, count=1000, displayTime=3000;
+
+	function init() {
+		createjs.CSSPlugin.install();
+		createjs.CSSPlugin.compute = true;
+		
+		fpsFld = document.getElementById("fps");
+		stage = document.body;
+		stage.style.overflow = "hidden";
+		
+		centerX = window.innerWidth/2;
+		centerY = window.innerHeight/2;
+		
+		radius = Math.sqrt(centerX*centerX + centerY*centerY);
+		
+		var t = performance.now();
+		var i = 0;
+		while (i++ < count) {
+			var dot = getDot();
+			stage.appendChild(dot);
+			tween(dot);
 		}
-		.box5 {
-			border-radius: 25%;
-			position: absolute;
-			top:  100px;
-			left: 100px;
-			width: 100px;
-			height: 100px;
-			background-color: #00f;
-			animation: test2 1s linear;
+		console.log("time to create tweens:",performance.now()-t,"ms");
+		
+		c.Ticker.timingMode = c.Ticker.RAF;
+		c.Ticker.on("tick",tick);
+	}
+	
+	function getDot() {
+		var dot = document.createElement("img");
+		dot.className = "dot";
+		dot.src = "images/dot.png";
+		return dot;
+	}
+	
+	function tween(dot) {
+		cssText = "left:" + centerX + "px; top:" + centerY + "px;";
+		if (!createjs.CSSPlugin.compute) {
+			// if we're not using computed values, all initial values need to be inline:
+			cssText += " width: 1px; height: 1px";
 		}
-		.box2 {
-			border-radius: 25%;
-			position: absolute;
-			top:  400px;
-			left: 300px;
-			width: 100px;
-			height: 100px;
-			background-color: #f00;
-		}
-		.box3 {
-			border-radius: 25%;
-			position: absolute;
-			top:  300px;
-			left: 200px;
-			width: 100px;
-			height: 100px;
-			background-color: #0f0;
-		}
-		.box4 {
-			border-radius: 25%;
-			position: absolute;
-			top:  600px;
-			left: 400px;
-			width: 100px;
-			height: 100px;
-			background-color: #0f0;
-		}
-		@keyframes test {
-			100% {
-				transform: * translate(200px, 300px) rotate(90deg) translate(100px, 200px);
-			}
-		}
-		@keyframes test2 {
-			100% {
-				transform: * translate(300px, 500px) rotate(90deg);
-			}
-		}
-	</style>
+		dot.style.cssText = cssText;
+		
+		var angle = Math.random() * Math.PI * 2;
+		c.Tween.get(dot, {loop:-1}).wait( Math.random() * duration ).to({
+				left:Math.cos(angle) * radius + centerX,
+				top:Math.sin(angle) * radius + centerY,
+				width:32, height:32
+			}, duration, c.Ease.cubicIn);
+		
+		return dot;
+	}
+	
+	function tick(evt) {
+		fpsFld.innerHTML = count+" @ "+c.Ticker.getMeasuredFPS(120).toFixed(1)+"fps";
+	}
+	
+	
+</script>
 </head>
-<body style="background-color: #19101c; overflow: hidden;">
-	<div class="box"></div>
-	<div class="box2"></div>
-	<div class="box3"></div>
-	<div class="box4"></div>
-	<div class="box5"></div>
+
+<body onload="init();" style="background-color:#111111">
+
+<header class="TweenJS">
+	<h1>CSS Performance Test</h1>
+	
+</header>
+<p id="fps">-- fps</p>
 </body>
 </html>
