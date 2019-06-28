@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: Rotation Plugin Example</title>
+	<script src="js/easeljs-NEXT.min.js"></script>
+	<script src="js/tweenjs-NEXT.js"></script>
+	<script src="js/RotationPlugin.js"></script>
+	<script>
+		let init = () => {
+			let stage = new createjs.Stage('canvas1');
+
+			let arrow = new createjs.Shape();
+			arrow.graphics.beginFill('#ff0000').drawRect(0, -2, 100, 4).drawPolyStar(100, 0, 10, 3, 0, 0);
+			arrow.x = stage.canvas.width / 2;
+			arrow.y = stage.canvas.height / 2;
+
+			createjs.RotationPlugin.install();
+
+			arrow.rotation = 0;
+			createjs.Tween.get(arrow, {loop: -1})
+				.to({rotation: 270}, 1000)
+				.wait(500)
+				.to({rotation: 0, rotationDir: 0}, 1000)
+				.wait(500)
+				.to({rotation: -1, rotationDir: 1}, 1000)
+				.wait(500)
+				.to({rotation: 0, rotationDir: -1}, 1000)
+				.wait(500)
+				.to({rotation: 1080, rotationDir: 0}, 1000)
+				.wait(1000);
+
+			let txt = new createjs.Text('Rotation Plugin', 'bold 20px Arial');
+			txt.textAlign = 'center';
+			txt.x = 450;
+			txt.y = 30;
+
+			createjs.Tween.get(txt, {loop: -1})
+				.to({text: 'Rotate(shortest distance to 270)'})
+				.wait(1500)
+				.to({text: 'Rotate(cw) to -1'})
+				.wait(1500)
+				.to({text: 'Rotate (ccw) to 0'})
+				.wait(1500)
+				.to({text: 'Rotate (default) to 1080'})
+				.wait(2000);
+
+			stage.addChild(arrow, txt);
+
+			createjs.Ticker.timingMode = createjs.Ticker.RAF;
+
+			createjs.Ticker.addEventListener('tick', stage);
+		};
+	</script>
+</head>
+<body onload="init()">
+	<canvas id="canvas1" width="960" height="350"></canvas>
+	<br>
+	<input type="button" value="toggle paused" onclick="createjs.Ticker.paused = !createjs.Ticker.paused;">
+</body>
+</html>
