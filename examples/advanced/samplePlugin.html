@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: Sample Plugin Example</title>
+	<script src="js/easeljs-NEXT.min.js"></script>
+	<script src="js/tweenjs-NEXT.js"></script>
+	<script src="js/SamplePlugin.js"></script>
+	<script>
+		let init = () => {
+			let stage = new createjs.Stage('canvas1');
+			let circle = new createjs.Shape();
+			circle.graphics.f('#ff0000').dc(0, 0, 50);
+			circle.x = 100;
+			circle.y = stage.canvas.height / 2;
+
+			stage.addChild(circle);
+
+			createjs.SamplePlugin.install();
+
+			createjs.Tween.get(circle, {loop: -1, bounce: true})
+				.to({x: stage.canvas.width - 100}, 4000, createjs.Ease.quadOut);
+
+			createjs.Ticker.timingMode = createjs.Ticker.RAF;
+			createjs.Ticker.addEventListener('tick', stage);
+		};
+	</script>
+</head>
+<body onload="init();">
+	<canvas id="canvas1" width="960" height="350"></canvas>
+	<input type="button" value="toggle paused" onclick="createjs.Ticker.paused = !createjs.Ticker.paused;">
+</body>
+</html>

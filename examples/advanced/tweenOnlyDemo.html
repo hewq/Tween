@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: Simple Tween Demo</title>
+	<script src="js/easeljs-NEXT.min.js"></script>
+	<script src="js/tweenjs-NEXT.js"></script>
+	<script src="js/CSSPlugin.js"></script>
+	<style>
+		.content {
+			position: relative;
+		}
+
+		.ball {
+			position: absolute;
+			width:  100px;
+			height:  100px;
+			background-color: red;
+			border-radius: 100%;
+			border:  3px solid #000;
+		}
+	</style>
+	<script>
+		let init = () => {
+			createjs.CSSPlugin.install(createjs.Tween);
+
+			let w = window.innerWidth, h = window.innerHeight;
+			let ball = document.createElement('div');
+			ball.className = 'ball';
+			document.body.appendChild(ball);
+
+			ball.style.left = w * 0.1 + 'px';
+			ball.style.top = h * 0.1 + 'px';
+
+			createjs.Tween.get(ball, {loop: -1})
+				.to({top: h - 110}, 1500, createjs.Ease.bounceOut);
+
+			createjs.Tween.get(ball, {loop: -1})
+				.to({left: w * 0.9 - 100}, 1500, createjs.Ease.getPowOut(1.5));
+
+			createjs.Ticker.timingMode = createjs.Ticker.RAF;
+		};
+	</script>
+</head>
+<body onload="init();">
+	
+</body>
+</html>

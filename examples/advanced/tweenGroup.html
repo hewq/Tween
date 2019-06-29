@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: Tween Group</title>
+	<script src="js/easeljs-NEXT.min.js"></script>
+	<script src="js/tweenjs-NEXT.js"></script>
+	<script>
+		let canvas, stage, group;
+
+		let init = () => {
+			canvas = document.getElementById('testCanvas');
+			stage = new createjs.Stage(canvas);
+			let w = canvas.width;
+			group = new createjs.TweenGroup();
+
+			let redBall = getBall('red', 0.1, 0.3);
+			let blueBall = getBall('blue', 0.1, 0.5);
+			let greenBall = getBall('green', 0.1, 0.7);
+
+			group.get(redBall, {loop: -1, bounce: true})
+				.to({x: w * 0.9}, 1000);
+			group.get(blueBall, {loop: -1, bounce: true})
+				.to({x: w * 0.9}, 1500);
+
+			group.get(greenBall, {loop: -1, bounce: true})
+				.to({x: w * 0.9}, 2000);
+
+			createjs.Ticker.timingMode = createjs.Ticker.RAF;
+			createjs.Ticker.addEventListener('tick', stage)
+		}; 
+
+		function getBall(color, x, y) {
+			let ball = new createjs.Shape();
+			ball.graphics.f(color).dc(0, 0, canvas.height * 0.1);
+			ball.x = canvas.width * x;
+			ball.y = canvas.height * y;
+			stage.addChild(ball);
+			return ball;
+		}
+
+		function setTimeScale(val) {
+			group.timeScale = val;
+			timeScaleFld.innerText = val.toFixed(1);
+		}
+
+		function togglePaused() {
+			console.log(group.paused);
+			group.paused = !group.paused;
+			pausedFld.innerText = group.paused;
+		}
+	</script>
+</head>
+<body onload="init();">
+	<p>
+		<code>group.timeScale = <b id="timeScaleFld">1.0</b></code>
+		<input type="range" id="timeScale" min="10" max="200" value="100" oninput="setTimeScale(this.value / 100)"><br>
+		<code>group.paused = <b id="pausedFld">false</b></code>
+		<input type="button" id="paused" value="toggle" onclick="togglePaused()">
+	</p>
+	<canvas id="testCanvas" width="960" height="400"></canvas>
+</body>
+</html>

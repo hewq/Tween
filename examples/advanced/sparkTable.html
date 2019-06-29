@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TweenJS: Spark Table</title>
+	<script src="js/easeljs-NEXT.min.js"></script>
+	<script src="js/tweenjs-NEXT.js"></script>
+	<script>
+		let eases = [createjs.Ease.none, createjs.Ease.linear, createjs.Ease.quadIn, createjs.Ease.getPowIn(2.5), createjs.Ease.cubicIn, createjs.Ease.quartIn, createjs.Ease.quintIn];
+
+		let init = () => {
+			let canvas = document.getElementById('canvas1');
+			stage = new createjs.Stage(canvas);
+			let graph = new createjs.Shape();
+			let g = graph.graphics;
+			stage.addChild(graph);
+
+			let w = canvas.width - 10;
+			let h = canvas.height - 10;
+
+			for (let j = 0, l = eases.length; j< l; j++) {
+				g.f(createjs.Graphics.getHSL(j / l * 360, 50, 50));
+				let ease = eases[j];
+				for (let i = 0; i < 100; i++) {
+					let x = i / 100 * w + 5;
+					let y = h - ease(i / 100) * h + 5;
+					g.dc(x, y, 3);
+					g.cp();
+				}
+			}
+			stage.update();
+		};
+	</script>
+</head>
+<body onload="init();">
+	<canvas id="canvas1" width="960" height="400"></canvas>
+</body>
+</html>
